@@ -1,0 +1,17 @@
+{
+  "name": "hello-react-pixi",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@inlet/react-pixi": "^0.5.9",
+    "pixi.js": "^4.8.7",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}
