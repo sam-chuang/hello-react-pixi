@@ -1,5 +1,5 @@
-import { Stage, Sprite } from "@inlet/react-pixi/dist/react-pixi.cjs"
-import React from "React"
+import { Stage, Sprite } from "@inlet/react-pixi"
+import React from "react"
 import { render } from "react-dom"
 
 
