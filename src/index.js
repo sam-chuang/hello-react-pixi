@@ -4,13 +4,16 @@ import { render } from "react-dom"
 import { updateById } from "./list"
 import Star from "./star"
 
+const width = 500
+const radius = 30
+
 const App = () => {
 
     let [ stars, setStars] = useState([{
         id: Math.random().toString(36),
-        x: 30,
+        x: width / 2 - radius,
         y: 30,
-        radius: 30,
+        radius,
         velocity: { 
             x: 0, 
             y: 3 
@@ -19,7 +22,7 @@ const App = () => {
 
     return (
         <Stage
-            width={500} 
+            width={width} 
             height={500} 
             options={{ 
                 antialias: true,
