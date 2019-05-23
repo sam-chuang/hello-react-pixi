@@ -4,8 +4,9 @@
   "description": "",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --open --mode development",
-    "build": "webpack --mode production"
+    "start": "webpack-dev-server --open --watch --mode development --devtool inline-source-map",
+    "build": "webpack --mode production",
+    "create": "npm run build && git commit -am $msg && git push"
   },
   "author": "",
   "license": "MIT",

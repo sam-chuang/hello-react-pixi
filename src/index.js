@@ -22,6 +22,7 @@ const App = () => {
             width={500} 
             height={500} 
             options={{ 
+                antialias: true,
                 backgroundColor: 0x012b30 
             }}>
             <Sprite
