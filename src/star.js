@@ -32,7 +32,8 @@ const shatter = star => {
                     y: randomFromRange(-15, 15)
                 },
                 gravity: 0.1,
-                timeToLife: 100
+                timeToLife: 100,
+                alpha: 1
             }
         )
         miniStars.push(miniStar)
@@ -43,7 +44,7 @@ const shatter = star => {
 //TODO: need delta?
 const move = (stars, screen) => 
     stars.map(star => {
-        let { x, y, timeToLife, velocity, friction = 0.8, gravity = 1 } = star
+        let { x, y, timeToLife, alpha = 1, velocity, friction = 0.8, gravity = 1 } = star
         if (hitBottom(star, screen.height)) {
             velocity.y = -velocity.y * friction
         } else {
@@ -53,11 +54,13 @@ const move = (stars, screen) =>
         x += velocity.x
         y += velocity.y
         timeToLife -= 1
+        alpha -= 1 / timeToLife
         return {
             ...star,
             x,
             y,
-            timeToLife
+            timeToLife,
+            alpha
         }
     })
 
@@ -68,7 +71,7 @@ export default function Star ( props ) {
         let { screen } = app
         let { y, radius, velocity, friction = 0.8, gravity = 1, update, miniStars = [] } = props
 
-        miniStars = move(miniStars, screen).filter(({ timeToLife }) => timeToLife > 0)
+        miniStars = move(miniStars, screen).filter(({ timeToLife, alpha }) => timeToLife > 0 && alpha > 0)
         if (hitBottom(props, screen.height)) {
             velocity.y = -velocity.y * friction
             radius -= 3
