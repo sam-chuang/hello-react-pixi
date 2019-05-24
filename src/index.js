@@ -3,7 +3,8 @@ import React, { useState } from "react"
 import { render } from "react-dom"
 import { updateById } from "./list"
 import Star from "./star"
-import { Gradient } from "./background"
+import { Gradient as BackgroundGradient } from "./background"
+import Mountain from "./mountain"
 
 //TODO: on resize
 const width = 800
@@ -32,9 +33,17 @@ const App = () => {
                 antialias: true,
                 transparent: true
             }}>
-            <Gradient 
+            <BackgroundGradient 
                 width={width} 
                 height={height} />
+            <Mountain 
+                amount={1}
+                height={100}
+                color={0xDDDDDD}/>
+            <Mountain 
+                amount={2}
+                height={100}
+                color={0x01FF70}/>
             <Sprite
                 image="https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/IaUrttj.png"
                 x={100}

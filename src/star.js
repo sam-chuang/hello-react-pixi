@@ -72,6 +72,11 @@ export default function Star ( props ) {
         let { y, radius, velocity, friction = 0.8, gravity = 1, update, miniStars = [] } = props
 
         miniStars = move(miniStars, screen).filter(({ timeToLife, alpha }) => timeToLife > 0 && alpha > 0)
+        if (miniStars.length === 0 && radius <= 0) {//done
+            //TODO: remove tick?
+            return
+        }
+
         if (hitBottom(props, screen.height)) {
             velocity.y = -velocity.y * friction
             radius -= 3
