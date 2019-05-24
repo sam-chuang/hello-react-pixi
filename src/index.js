@@ -3,8 +3,12 @@ import React, { useState } from "react"
 import { render } from "react-dom"
 import { updateById } from "./list"
 import Star from "./star"
+import { Gradient } from "./background"
 
-const width = 500
+//TODO: on resize
+const width = 800
+const height = 600
+
 const radius = 30
 
 const App = () => {
@@ -23,11 +27,14 @@ const App = () => {
     return (
         <Stage
             width={width} 
-            height={500} 
+            height={height} 
             options={{ 
                 antialias: true,
-                backgroundColor: 0x012b30 
+                transparent: true
             }}>
+            <Gradient 
+                width={width} 
+                height={height} />
             <Sprite
                 image="https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/IaUrttj.png"
                 x={100}
@@ -49,5 +56,25 @@ const App = () => {
 
 render(
     <App />, 
-    document.body
+    document.getElementById("app")
 )
+
+/*
+const Lab = () => {
+    const canvas = document.createElement("canvas")
+    canvas.width = width
+    canvas.height = height
+
+    const ctx = canvas.getContext("2d")
+    const gradient = ctx.createLinearGradient(0, 0, 0, height)
+    gradient.addColorStop(0, "#171E26")
+    gradient.addColorStop(1, "#3F586B")
+
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, width, height)
+
+    return canvas
+}
+
+document.getElementById("lab").appendChild(Lab())
+*/
