@@ -1,5 +1,5 @@
 import { Stage, Sprite } from "@inlet/react-pixi"
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import { render } from "react-dom"
 import { updateById } from "./list"
 import Star from "./star"
@@ -12,10 +12,22 @@ const height = 600
 
 const radius = 30
 
+const backgroundStars = []
+for (let i = 0; i < 150; i++) {
+    backgroundStars.push({
+        id: Math.random().toString(36),
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 3,
+        color: 0xFAFDEC
+    })
+}
+
 const App = () => {
 
     let [ stars, setStars] = useState([{
         id: Math.random().toString(36),
+        falling: true,
         x: width / 2 - radius,
         y: 30,
         radius,
@@ -36,14 +48,27 @@ const App = () => {
             <BackgroundGradient 
                 width={width} 
                 height={height} />
+            {useMemo(
+                () => backgroundStars.map(star => (
+                    <Star 
+                        key={star.id}
+                        {...star}
+                    />
+                )),
+                backgroundStars  
+            )}
             <Mountain 
                 amount={1}
-                height={100}
-                color={0xDDDDDD}/>
+                height={height - 100}
+                color={0x384551}/>
             <Mountain 
                 amount={2}
-                height={100}
-                color={0x01FF70}/>
+                height={height - 150}
+                color={0x2B3843}/>
+            <Mountain 
+                amount={3}
+                height={height - 200}
+                color={0x26333E}/>
             <Sprite
                 image="https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/IaUrttj.png"
                 x={100}

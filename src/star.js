@@ -66,6 +66,7 @@ const move = (stars, screen) =>
 
 export default function Star ( props ) {
     let app = useApp()
+    let { falling = false } = props
 
     useTick(delta => {
         let { screen } = app
@@ -73,7 +74,10 @@ export default function Star ( props ) {
 
         miniStars = move(miniStars, screen).filter(({ timeToLife, alpha }) => timeToLife > 0 && alpha > 0)
         if (miniStars.length === 0 && radius <= 0) {//done
-            //TODO: remove tick?
+            update({
+                ...props,
+                falling: false
+            })
             return
         }
 
@@ -96,7 +100,7 @@ export default function Star ( props ) {
             y,
             miniStars
         })
-    })
+    }, falling)
 
     let { miniStars = [], ...star } = props
     return (

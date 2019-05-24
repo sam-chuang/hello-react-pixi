@@ -17,9 +17,9 @@ const create = (props) =>  {
                         graphics.beginFill(color)
 
                         graphics.moveTo(i * mountainWidth, screen.height)
-                        graphics.lineTo(i * mountainWidth + mountainWidth, screen.height)
+                        graphics.lineTo(i * mountainWidth + mountainWidth + 325, screen.height)
                         graphics.lineTo(i * mountainWidth + mountainWidth / 2, screen.height - height)
-                        graphics.lineTo(i * mountainWidth, screen.height)
+                        graphics.lineTo(i * mountainWidth - 325, screen.height)
 
                         graphics.endFill()
                     }}
