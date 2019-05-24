@@ -2,8 +2,10 @@ import { Graphics, Container, useTick, useApp } from "@inlet/react-pixi"
 import React from "react"
 import { randomFromRange } from "./number"
 
+export const DefaultColor = 0xFAFDEC
+
 const draw = ( star, graphics ) => {
-    const { radius, color = 0xDE3249 } = star
+    const { radius, color = DefaultColor } = star
     const EmptyOutline = 0
 
     graphics.clear()
@@ -16,7 +18,7 @@ const draw = ( star, graphics ) => {
 const hitBottom = ({ y, radius, velocity }, height) => y + radius + velocity.y > height
 
 const shatter = star => {
-    let { miniStars = [] } = star
+    let { miniStars = [], color = DefaultColor} = star
     let size = 8
     for (let i = 0; i < size ; i++) {
         let miniStar = Object.assign(
@@ -26,7 +28,7 @@ const shatter = star => {
                 id: Math.random().toString(36),
                 miniStars: [],
                 radius: 2,
-                color: 0x7FDBFF,
+                color,
                 velocity: {
                     x: randomFromRange(-5, 5),
                     y: randomFromRange(-15, 15)

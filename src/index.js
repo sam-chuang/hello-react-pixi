@@ -18,8 +18,7 @@ for (let i = 0; i < 150; i++) {
         id: Math.random().toString(36),
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 3,
-        color: 0xFAFDEC
+        radius: Math.random() * 3
     })
 }
 
