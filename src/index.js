@@ -93,7 +93,9 @@ render(
 )
 
 
-const Lab = () => {
+const Lab = shadowEffect
+
+const shadowEffect = () => {
     const canvas = document.createElement("canvas")
     const c = canvas.getContext("2d")
 
@@ -108,7 +110,7 @@ const Lab = () => {
     return canvas
 }
 
-const backgroundGradientCancas = () => {
+const backgroundGradientEffect = () => {
     const canvas = document.createElement("canvas")
     canvas.width = width
     canvas.height = height
@@ -124,4 +126,4 @@ const backgroundGradientCancas = () => {
     return canvas
 }
 
-document.getElementById("lab").appendChild(Lab())
+//document.getElementById("lab").appendChild(Lab())
