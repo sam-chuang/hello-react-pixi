@@ -1,25 +1,56 @@
-import { Graphics, Container, useTick, useApp } from "@inlet/react-pixi"
-import React from "react"
+import { Sprite, Container, useTick, useApp } from "@inlet/react-pixi"
+import React, { useCallback, useMemo } from "react"
 import { randomFromRange } from "./number"
+import { Texture } from "pixi.js"
+import { GlowFilter  } from "@pixi/filter-glow"
+import { OutlineFilter } from "@pixi/filter-outline"
+import memoize from "fast-memoize"
 
-export const DefaultColor = 0xFAFDEC
+export const DefaultColor = "#FAFDEC"
+const DefaultShadowColor = "#E3EAEF"
 
-const draw = ( star, graphics ) => {
-    const { radius, color = DefaultColor } = star
-    const EmptyOutline = 0
+const starTexture = memoize(props => {
+    let { radius, color = DefaultColor, shadow = { color: DefaultShadowColor, blur: 20 } } = props
+    const canvas = document.createElement("canvas")
+    let size = radius * 2 + shadow.blur * 2
+    canvas.width = size
+    canvas.height = size
 
-    graphics.clear()
-    graphics.lineStyle(EmptyOutline)
-    graphics.beginFill(color, 1);
-    graphics.drawCircle(0, 0, radius);
-    graphics.endFill()
-}
+    const c = canvas.getContext("2d")
+    c.beginPath()
+    c.arc(radius + shadow.blur, radius + shadow.blur, radius, 0, Math.PI * 2, false)
+    c.fillStyle = color
+    c.shadowColor = shadow.color
+    c.shadowBlur = shadow.blur
+    c.fill()
+    c.closePath()
+    let result = Texture.from(canvas)    
+    result.defaultAnchor.set(0.5)
+
+    return result
+})
+
+const miniStartTexture = memoize(props => {
+    let { color: DefaultColor, radius, shadow = { color: DefaultShadowColor, blur: 20 } } = props
+    const canvas = document.createElement("canvas")
+    const c = canvas.getContext("2d")
+
+    c.beginPath()
+    c.arc(0, 0, radius, 0, Math.PI * 2, false)
+    c.fillStyle = DefaultColor
+    c.shadowColor = shadow.color
+    c.shadowBlur = shadow.blur
+    c.fill()
+    c.closePath()
+
+    return Texture.from(canvas)
+})
 
 const hitBottom = ({ y, radius, velocity }, height) => y + radius + velocity.y > height
 
 const shatter = star => {
     let { miniStars = [], color = DefaultColor} = star
-    let size = 8
+    let size = 32
     for (let i = 0; i < size ; i++) {
         let miniStar = Object.assign(
             {}, 
@@ -43,10 +74,19 @@ const shatter = star => {
     return miniStars
 }
 
-//TODO: need delta?
 const move = (stars, screen) => 
-    stars.map(star => {
+    stars.reduce((result, star) => {
         let { x, y, timeToLife, alpha = 1, velocity, friction = 0.8, gravity = 1 } = star
+        timeToLife -= 1
+        if (timeToLife <= 0) {
+            return result
+        }
+
+        alpha -= 1 / timeToLife
+        if (alpha <= 0.1) {
+            return result
+        }
+
         if (hitBottom(star, screen.height)) {
             velocity.y = -velocity.y * friction
         } else {
@@ -55,16 +95,16 @@ const move = (stars, screen) =>
 
         x += velocity.x
         y += velocity.y
-        timeToLife -= 1
-        alpha -= 1 / timeToLife
-        return {
+        
+        result.push({
             ...star,
             x,
             y,
             timeToLife,
             alpha
-        }
-    })
+        })
+        return result 
+    }, [])
 
 export default function Star ( props ) {
     let app = useApp()
@@ -74,10 +114,11 @@ export default function Star ( props ) {
         let { screen } = app
         let { y, radius, velocity, friction = 0.8, gravity = 1, update, miniStars = [] } = props
 
-        miniStars = move(miniStars, screen).filter(({ timeToLife, alpha }) => timeToLife > 0 && alpha > 0)
+        miniStars = move(miniStars, screen)
         if (miniStars.length === 0 && radius <= 0) {//done
             update({
                 ...props,
+                miniStars: [],
                 falling: false
             })
             return
@@ -109,21 +150,18 @@ export default function Star ( props ) {
         <Container>
             {
                 star.radius > 0 && 
-                    <Graphics
+                    <Sprite 
                         {...star}
-                        draw={graphics => draw(props, graphics)}>
-                    </Graphics>
+                        texture={starTexture({ radius: star.radius, color: star.color })}
+                    />
             }
             {
-                miniStars.map(miniStar => (
-                    <Graphics
+                miniStars.map((miniStar) => (
+                    <Sprite 
                         key={miniStar.id}
                         {...miniStar}
-                        draw={graphics => {
-                            draw(miniStar, graphics)
-                        }}
-                        >
-                    </Graphics>
+                        texture={miniStartTexture({ radius: miniStar.radius, color: miniStar.color })}
+                    />
                 ))
             }
         </Container>

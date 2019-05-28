@@ -12,6 +12,9 @@
   "license": "MIT",
   "dependencies": {
     "@inlet/react-pixi": "^0.5.9",
+    "@pixi/filter-glow": "^2.7.0",
+    "@pixi/filter-outline": "^2.7.0",
+    "fast-memoize": "^2.5.1",
     "pixi.js": "^4.8.7",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"

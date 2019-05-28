@@ -6,7 +6,6 @@ import Star from "./star"
 import { Gradient as BackgroundGradient } from "./background"
 import Mountain from "./mountain"
 
-//TODO: on resize
 const width = 800
 const height = 600
 
@@ -42,7 +41,8 @@ const App = () => {
             height={height} 
             options={{ 
                 antialias: true,
-                transparent: true
+                transparent: true,
+                sharedTicker: true
             }}>
             <BackgroundGradient 
                 width={width} 
@@ -92,8 +92,23 @@ render(
     document.getElementById("app")
 )
 
-/*
+
 const Lab = () => {
+    const canvas = document.createElement("canvas")
+    const c = canvas.getContext("2d")
+
+    c.beginPath()
+    c.arc(20, 20, 20, 0, Math.PI * 2, false)
+    c.fillStyle = "red"
+    c.shadowColor = "blue"
+    c.shadowBlur = 20
+    c.fill()
+    c.closePath()
+
+    return canvas
+}
+
+const backgroundGradientCancas = () => {
     const canvas = document.createElement("canvas")
     canvas.width = width
     canvas.height = height
@@ -110,4 +125,3 @@ const Lab = () => {
 }
 
 document.getElementById("lab").appendChild(Lab())
-*/
