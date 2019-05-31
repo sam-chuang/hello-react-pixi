@@ -1,18 +1,18 @@
 import { Stage, Sprite } from "@inlet/react-pixi"
-import React, { useState, useMemo } from "react"
+import React, { useReducer, useMemo } from "react"
 import { render } from "react-dom"
-import { updateById } from "./list"
-import Star from "./star"
+import { StarsDispatch } from "./context"
+import Star, { reducer as starsReducer, Action } from "./star"
 import { Gradient as BackgroundGradient } from "./background"
+import usInterval from "./useInterval"
 import Mountain from "./mountain"
+import { randomIntegerFromRange } from "./number"
 
 const width = 800
 const height = 600
 
-const radius = 30
-
 const backgroundStars = []
-for (let i = 0; i < 150; i++) {
+for (let i = 0; i < 100; i++) {
     backgroundStars.push({
         id: Math.random().toString(36),
         x: Math.random() * width,
@@ -21,19 +21,32 @@ for (let i = 0; i < 150; i++) {
     })
 }
 
-const App = () => {
-
-    let [ stars, setStars] = useState([{
+const newFallingStar = radius => (
+    {
         id: Math.random().toString(36),
         falling: true,
         x: width / 2 - radius,
-        y: 30,
+        y: randomIntegerFromRange(radius, radius * 1.5),
         radius,
         velocity: { 
-            x: 0, 
-            y: 3 
+            x: randomIntegerFromRange(-2, 2), 
+            y: randomIntegerFromRange(3, 6)
         }
-    }])
+    }
+)
+
+const App = () => {
+
+    let [ stars, dispatch ] = useReducer(starsReducer, [ newFallingStar(25) ])
+
+    usInterval(() => {
+        if (stars.length == 0) {
+            dispatch({
+                action: Action.Add,
+                star: newFallingStar(25)
+            })
+        }
+    }, 4000)
 
     return (
         <Stage
@@ -73,16 +86,15 @@ const App = () => {
                 x={100}
                 y={100}
             />
-            {
-                stars.map((props, index, stars) => (
-                    <Star 
-                        key={props.id}
-                        {...props} 
-                        update={newProps => 
-                            setStars(updateById(newProps.id, () => newProps, stars))
-                        }/>
-                ))
-            }
+            <StarsDispatch.Provider value={dispatch}>
+                {
+                    stars.map(star => (
+                        <Star 
+                            key={star.id}
+                            {...star}/>
+                    ))
+                }
+            </StarsDispatch.Provider>
         </Stage>
     )
 }
